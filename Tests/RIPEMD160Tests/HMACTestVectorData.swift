@@ -1,47 +1,37 @@
-import Foundation
-
 let hmacTestVectorData =
     """
     [
         {
-            "key": "00112233445566778899aabbccddeeff01234567",
             "message": "",
-            "hexEncodedHash": "9c1185a5c5e9fc54612808977ee8f548b2258d31"
+            "hexEncodedHash": "cf387677bfda8483e63b57e06c3b5ecd8b7fc055"
         },
         {
-            "key": "00112233445566778899aabbccddeeff01234567",
             "message": "a",
-            "hexEncodedHash": "0bdc9d2d256b3ee9daae347be6f4dc835a467ffe"
+            "hexEncodedHash": "0d351d71b78e36dbb7391c810a0d2b6240ddbafc"
         },
         {
-            "key": "00112233445566778899aabbccddeeff01234567",
             "message": "abc",
-            "hexEncodedHash": "8eb208f7e05d987a9b044a8e98c6b087f15a0bfc"
+            "hexEncodedHash": "f7ef288cb1bbcc6160d76507e0a3bbf712fb67d6"
         },
         {
-            "key": "00112233445566778899aabbccddeeff01234567",
             "message": "message digest",
-            "hexEncodedHash": "5d0689ef49d2fae572b881b123a85ffa21595f36"
+            "hexEncodedHash": "f83662cc8d339c227e600fcd636c57d2571b1c34"
         },
         {
-            "key": "00112233445566778899aabbccddeeff01234567",
             "message": "abcdefghijklmnopqrstuvwxyz",
-            "hexEncodedHash": "f71c27109c692c1b56bbdceb5b9d2865b3708dbc"
+            "hexEncodedHash": "843d1c4eb880ac8ac0c9c95696507957d0155ddb"
         },
         {
-            "key": "00112233445566778899aabbccddeeff01234567",
             "message": "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
-            "hexEncodedHash": "12a053384a9c0c88e405a06c27dcf49ada62eb2b"
+            "hexEncodedHash": "60f5ef198a2dd5745545c1f0c47aa3fb5776f881"
         },
         {
-            "key": "00112233445566778899aabbccddeeff01234567",
             "message": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-            "hexEncodedHash": "b0e20b6e3116640286ed3a87a5713079b21f5189"
+            "hexEncodedHash": "e49c136a9e5627e0681b808a3b97e6a6e661ae79"
         },
         {
-            "key": "00112233445566778899aabbccddeeff01234567",
             "message": "12345678901234567890123456789012345678901234567890123456789012345678901234567890",
-            "hexEncodedHash": "9b752e45573d4b39f4dbd3323cab82bf63326bfb"
+            "hexEncodedHash": "31be3cc98cee37b79b0619e3e1c2be4f1aa56e6c"
         }
     ]
     """

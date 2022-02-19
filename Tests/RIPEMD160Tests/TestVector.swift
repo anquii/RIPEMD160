@@ -1,5 +1,4 @@
-struct HMACTestVector: Decodable {
-    let key: String
+struct TestVector: Decodable {
     let message: String
     let hexEncodedHash: String
 }
