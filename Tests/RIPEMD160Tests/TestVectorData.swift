@@ -1,4 +1,4 @@
-let hashTestVectorData =
+let testVectorData =
     """
     [
         {
