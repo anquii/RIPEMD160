@@ -1,7 +1,6 @@
 import Foundation
 
 public struct RIPEMD160 {
-
     private var MDbuf: (UInt32, UInt32, UInt32, UInt32, UInt32)
     private var buffer: Data
     private var count: Int64 // Total # of bytes processed.
@@ -12,36 +11,96 @@ public struct RIPEMD160 {
         count = 0
     }
 
-    private mutating func compress(_ X: UnsafePointer<UInt32>) {
+    public mutating func update(data: Data) {
+        var X = [UInt32](repeating: 0, count: 16)
+        var pos = data.startIndex
+        var length = data.count
 
+        // Process remaining bytes from last call:
+        if buffer.count > 0 && buffer.count + length >= 64 {
+            let amount = 64 - buffer.count
+            buffer.append(data[..<amount])
+            X.withUnsafeMutableBytes {
+                _ = buffer.copyBytes(to: $0)
+            }
+            compress(X)
+            pos += amount
+            length -= amount
+        }
+
+        // Process 64 byte chunks:
+        while length >= 64 {
+            X.withUnsafeMutableBytes {
+                _ = data[pos..<pos+64].copyBytes(to: $0)
+            }
+            compress(X)
+            pos += 64
+            length -= 64
+        }
+
+        // Save remaining unprocessed bytes:
+        buffer = data[pos...]
+        count += Int64(data.count)
+    }
+
+    public mutating func finalize() -> Data {
+        var X = [UInt32](repeating: 0, count: 16)
+        /* append the bit m_n == 1 */
+        buffer.append(0x80)
+        X.withUnsafeMutableBytes {
+            _ = buffer.copyBytes(to: $0)
+        }
+
+        if (count & 63) > 55 {
+            /* length goes to next block */
+            compress(X)
+            X = [UInt32](repeating: 0, count: 16)
+        }
+
+        /* append length in bits */
+        let lswlen = UInt32(truncatingIfNeeded: count)
+        let mswlen = UInt32(UInt64(count) >> 32)
+        X[14] = lswlen << 3
+        X[15] = (lswlen >> 29) | (mswlen << 3)
+        compress(X)
+
+        buffer = Data()
+        let result = [MDbuf.0, MDbuf.1, MDbuf.2, MDbuf.3, MDbuf.4]
+        return result.withUnsafeBytes { Data($0) }
+    }
+}
+
+// MARK: - Helpers
+fileprivate extension RIPEMD160 {
+    mutating func compress(_ X: UnsafePointer<UInt32>) {
         // *** Helper functions (originally macros in rmd160.h) ***
 
         /* ROL(x, n) cyclically rotates x over n bits to the left */
         /* x must be of an unsigned 32 bits type and 0 <= n < 32. */
         func ROL(_ x: UInt32, _ n: UInt32) -> UInt32 {
-            return (x << n) | ( x >> (32 - n))
+            (x << n) | ( x >> (32 - n))
         }
 
         /* the five basic functions F(), G() and H() */
 
         func F(_ x: UInt32, _ y: UInt32, _ z: UInt32) -> UInt32 {
-            return x ^ y ^ z
+            x ^ y ^ z
         }
 
         func G(_ x: UInt32, _ y: UInt32, _ z: UInt32) -> UInt32 {
-            return (x & y) | (~x & z)
+            (x & y) | (~x & z)
         }
 
         func H(_ x: UInt32, _ y: UInt32, _ z: UInt32) -> UInt32 {
-            return (x | ~y) ^ z
+            (x | ~y) ^ z
         }
 
         func I(_ x: UInt32, _ y: UInt32, _ z: UInt32) -> UInt32 {
-            return (x & z) | (y & ~z)
+            (x & z) | (y & ~z)
         }
 
         func J(_ x: UInt32, _ y: UInt32, _ z: UInt32) -> UInt32 {
-            return x ^ (y | ~z)
+            x ^ (y | ~z)
         }
 
         /* the ten basic operations FF() through III() */
@@ -292,68 +351,12 @@ public struct RIPEMD160 {
         FFF(&bbb, ccc, &ddd, eee, aaa, X[11] , 11)
 
         /* combine results */
-        MDbuf = (MDbuf.1 &+ cc &+ ddd,
-                 MDbuf.2 &+ dd &+ eee,
-                 MDbuf.3 &+ ee &+ aaa,
-                 MDbuf.4 &+ aa &+ bbb,
-                 MDbuf.0 &+ bb &+ ccc)
-    }
-
-    public mutating func update(data: Data) {
-        var X = [UInt32](repeating: 0, count: 16)
-        var pos = data.startIndex
-        var length = data.count
-
-        // Process remaining bytes from last call:
-        if buffer.count > 0 && buffer.count + length >= 64 {
-            let amount = 64 - buffer.count
-            buffer.append(data[..<amount])
-            X.withUnsafeMutableBytes {
-                _ = buffer.copyBytes(to: $0)
-            }
-            compress(X)
-            pos += amount
-            length -= amount
-        }
-
-        // Process 64 byte chunks:
-        while length >= 64 {
-            X.withUnsafeMutableBytes {
-                _ = data[pos..<pos+64].copyBytes(to: $0)
-            }
-            compress(X)
-            pos += 64
-            length -= 64
-        }
-
-        // Save remaining unprocessed bytes:
-        buffer = data[pos...]
-        count += Int64(data.count)
-    }
-
-    public mutating func finalize() -> Data {
-        var X = [UInt32](repeating: 0, count: 16)
-        /* append the bit m_n == 1 */
-        buffer.append(0x80)
-        X.withUnsafeMutableBytes {
-            _ = buffer.copyBytes(to: $0)
-        }
-
-        if (count & 63) > 55 {
-            /* length goes to next block */
-            compress(X)
-            X = [UInt32](repeating: 0, count: 16)
-        }
-
-        /* append length in bits */
-        let lswlen = UInt32(truncatingIfNeeded: count)
-        let mswlen = UInt32(UInt64(count) >> 32)
-        X[14] = lswlen << 3
-        X[15] = (lswlen >> 29) | (mswlen << 3)
-        compress(X)
-
-        buffer = Data()
-        let result = [MDbuf.0, MDbuf.1, MDbuf.2, MDbuf.3, MDbuf.4]
-        return result.withUnsafeBytes { Data($0) }
+        MDbuf = (
+            MDbuf.1 &+ cc &+ ddd,
+            MDbuf.2 &+ dd &+ eee,
+            MDbuf.3 &+ ee &+ aaa,
+            MDbuf.4 &+ aa &+ bbb,
+            MDbuf.0 &+ bb &+ ccc
+        )
     }
 }
