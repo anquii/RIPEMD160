@@ -14,25 +14,27 @@ final class RIPEMD160Tests: XCTestCase {
 
     func testGivenVectorMessage_WhenGenerateHash_ThenEqualVectorHash() {
         for testVector in testVectors {
-            let hexEncodedHash = RIPEMD160
-                .hash(message: testVector.message)
-                .hexEncodedString()
+            let hash = hash(message: testVector.message)
+            let hexEncodedHash = hexEncodedString(data: hash)
             XCTAssertEqual(hexEncodedHash, testVector.hexEncodedHash)
         }
     }
 
     func testGivenVectorMessageTimes1M_WhenGenerateHash_ThenEqualVectorHash() {
         let message = String(repeating: "a", count: 1_000_000)
-        let hexEncodedHash = RIPEMD160
-            .hash(message: message)
-            .hexEncodedString()
+        let hash = hash(message: message)
+        let hexEncodedHash = hexEncodedString(data: hash)
         XCTAssertEqual(hexEncodedHash, "52783243c1697bdbe16d37f97f68f08325dc1528")
     }
 }
 
-// MARK: - Data+HexEncodedString
-fileprivate extension Data {
-    func hexEncodedString() -> String {
-        map { String(format: "%02hhx", $0) }.joined()
+// MARK: - Helpers
+fileprivate extension RIPEMD160Tests {
+    func hash(message: String) -> Data {
+        RIPEMD160.hash(data: message.data(using: .utf8)!)
+    }
+
+    func hexEncodedString(data: Data) -> String {
+        data.map { String(format: "%02hhx", $0) }.joined()
     }
 }

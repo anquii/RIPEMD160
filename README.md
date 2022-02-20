@@ -25,7 +25,7 @@ Add the following line to your `Package.swift` file:
 ```swift
 import RIPEMD160
 
-let hash = RIPEMD160.hash(message: message)
+let hash = RIPEMD160.hash(data: data)
 ```
 
 ## License
