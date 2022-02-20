@@ -20,6 +20,14 @@ Add the following line to your `Package.swift` file:
 ```
 ...or integrate with Xcode via `File -> Swift Packages -> Add Package Dependency...` using the URL of the repository.
 
+## Usage
+
+```swift
+import RIPEMD160
+
+let hash = RIPEMD160.hash(message: "")
+```
+
 ## License
 
 RIPEMD160 is licensed under the terms of the MIT license. See the [LICENSE](LICENSE) file for more information.
