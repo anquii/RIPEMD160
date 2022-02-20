@@ -20,6 +20,14 @@ final class RIPEMD160Tests: XCTestCase {
             XCTAssertEqual(hexEncodedHash, testVector.hexEncodedHash)
         }
     }
+
+    func testGivenVectorMessageTimes1M_WhenGenerateHash_ThenEqualVectorHash() {
+        let message = String(repeating: "a", count: 1_000_000)
+        let hexEncodedHash = RIPEMD160
+            .hash(message: message)
+            .hexEncodedString()
+        XCTAssertEqual(hexEncodedHash, "52783243c1697bdbe16d37f97f68f08325dc1528")
+    }
 }
 
 // MARK: - Data+HexEncodedString
