@@ -8,7 +8,7 @@ final class RIPEMD160Tests: XCTestCase {
         testVectors = try JSONDecoder().decode([TestVector].self, from: testVectorData)
     }
 
-    func testGivenHashVectors_WhenCount_ThenEqual8() {
+    func testGivenVectors_WhenCount_ThenEqual8() {
         XCTAssertEqual(testVectors.count, 8)
     }
 
