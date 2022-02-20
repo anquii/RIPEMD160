@@ -30,4 +30,4 @@ let hash = RIPEMD160.hash(data: data)
 
 ## License
 
-RIPEMD160 is licensed under the terms of the MIT license. See the [LICENSE](LICENSE) file for more information.
+`RIPEMD160` is licensed under the terms of the MIT license. See the [LICENSE](LICENSE) file for more information.
