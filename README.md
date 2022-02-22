@@ -2,7 +2,7 @@
 
 [![Platform](https://img.shields.io/badge/Platforms-macOS%20%7C%20iOS-blue)](#platforms)
 [![Swift Package Manager compatible](https://img.shields.io/badge/SPM-compatible-orange)](#swift-package-manager)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/anquii/BIP32/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/anquii/RIPEMD160/blob/main/LICENSE)
 
 An implementation of [RIPEMD-160](https://homes.esat.kuleuven.be/~bosselae/ripemd160.html) in Swift. All credit goes to [Martin R.](https://stackoverflow.com/users/1187415/martin-r) for publishing the implemention [here](https://stackoverflow.com/questions/43091858/swift-hash-a-string-using-hash-hmac-with-ripemd160/43193583#43193583).  
 
