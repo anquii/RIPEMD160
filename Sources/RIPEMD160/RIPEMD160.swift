@@ -1,5 +1,10 @@
 import Foundation
 
+public protocol RIPEMD160Hashing {
+    mutating func update(data: Data)
+    mutating func finalize() -> Data
+}
+
 public struct RIPEMD160 {
     private var MDbuf: (UInt32, UInt32, UInt32, UInt32, UInt32)
     private var buffer: Data
@@ -10,7 +15,10 @@ public struct RIPEMD160 {
         buffer = Data()
         count = 0
     }
+}
 
+// MARK: - RIPEMD160Hashing
+extension RIPEMD160: RIPEMD160Hashing {
     public mutating func update(data: Data) {
         var X = [UInt32](repeating: 0, count: 16)
         var pos = data.startIndex
