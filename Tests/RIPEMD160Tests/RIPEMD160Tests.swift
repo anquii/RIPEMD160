@@ -12,7 +12,7 @@ final class RIPEMD160Tests: XCTestCase {
         XCTAssertEqual(testVectors.count, 8)
     }
 
-    func testGivenVectorMessage_WhenGenerateHash_ThenEqualVectorHash() {
+    func testGivenVectorMessage_WhenComputeHash_ThenEqualVectorHash() {
         for testVector in testVectors {
             let hash = hash(message: testVector.message)
             let hexEncodedHash = hexEncodedString(data: hash)
@@ -20,11 +20,12 @@ final class RIPEMD160Tests: XCTestCase {
         }
     }
 
-    func testGivenVectorMessageTimes1M_WhenGenerateHash_ThenEqualVectorHash() {
-        let message = String(repeating: "a", count: 1_000_000)
+    func testGivenVectorMessageTimes1M_WhenComputeHash_ThenEqualVectorHash() {
+        let testVector = TestVector(message: "a", hexEncodedHash: "52783243c1697bdbe16d37f97f68f08325dc1528")
+        let message = String(repeating: testVector.message, count: 1_000_000)
         let hash = hash(message: message)
         let hexEncodedHash = hexEncodedString(data: hash)
-        XCTAssertEqual(hexEncodedHash, "52783243c1697bdbe16d37f97f68f08325dc1528")
+        XCTAssertEqual(hexEncodedHash, testVector.hexEncodedHash)
     }
 }
 
